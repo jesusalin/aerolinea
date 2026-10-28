@@ -1,0 +1,16 @@
+﻿@model List<AeroAndes.Data.Entities.Destino>
+
+<h1>AeroAndes</h1>
+<div class="row">
+    @foreach (var d in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>@d.Ciudad, @d.Pais</h5>
+                    <p>@d.Descripcion</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>

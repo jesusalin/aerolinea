@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37614.0 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AeroAndes", "AeroAndes\AeroAndes.csproj", "{EA30EF88-2D42-4EB6-AABA-8DD17C8183BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AeroAndes.Data", "AeroAndes.Data\AeroAndes.Data.csproj", "{07A68682-5D8F-4514-BDA9-98BEC1F64AEA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EA30EF88-2D42-4EB6-AABA-8DD17C8183BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA30EF88-2D42-4EB6-AABA-8DD17C8183BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA30EF88-2D42-4EB6-AABA-8DD17C8183BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA30EF88-2D42-4EB6-AABA-8DD17C8183BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07A68682-5D8F-4514-BDA9-98BEC1F64AEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07A68682-5D8F-4514-BDA9-98BEC1F64AEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07A68682-5D8F-4514-BDA9-98BEC1F64AEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07A68682-5D8F-4514-BDA9-98BEC1F64AEA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A3B3FF31-0B69-46EC-8442-8F4D3445BE52}
+	EndGlobalSection
+EndGlobal
