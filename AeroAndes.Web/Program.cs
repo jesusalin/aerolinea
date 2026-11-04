@@ -1,6 +1,8 @@
 using System.Globalization;
 using AeroAndes.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 
 // Cultura invariable: formatos de fecha y decimales consistentes.
 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
@@ -14,7 +16,25 @@ var cs = builder.Configuration.GetConnectionString("AeroAndes")
         "Falta la cadena de conexión 'AeroAndes'. Configúrela con 'dotnet user-secrets' (ver LEEME.md).");
 
 builder.Services.AddDbContext<AeroAndesDbContext>(o => o.UseMySql(cs, ServerVersion.AutoDetect(cs)));
-builder.Services.AddControllersWithViews();
+// Valida automáticamente el token anti-CSRF en todos los POST.
+builder.Services.AddControllersWithViews(o =>
+    o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+
+builder.Services.AddMemoryCache();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(o =>
+    {
+        o.LoginPath = "/Cuenta/Login";
+        o.AccessDeniedPath = "/Cuenta/AccesoDenegado";
+        o.Cookie.Name = "AeroAndes.Auth";
+        o.Cookie.HttpOnly = true;                           // JavaScript no puede leerla
+        o.Cookie.SecurePolicy = CookieSecurePolicy.Always;  // solo viaja por HTTPS
+        o.Cookie.SameSite = SameSiteMode.Strict;            // protección CSRF
+        o.ExpireTimeSpan = TimeSpan.FromMinutes(20);        // expira por inactividad
+        o.SlidingExpiration = true;
+    });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -41,6 +61,8 @@ app.Use(async (context, next) =>
 
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
