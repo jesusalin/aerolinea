@@ -1,8 +1,17 @@
-﻿@{
+@{
     ViewData["Title"] = "Acceso denegado";
 }
-<div class="container py-5">
-    <h1 class="h3">Acceso denegado</h1>
-    <p>No tiene permisos para ver esta página.</p>
-    <a class="btn btn-ae" asp-controller="Home" asp-action="Index">Volver al inicio</a>
-</div>
+<section class="ae-auth">
+    <div class="container">
+        <div class="ae-auth-card">
+            <div class="ae-auth-top">
+                <h1>Acceso denegado</h1>
+                <p>Código 403</p>
+            </div>
+            <div class="ae-auth-body">
+                <p>No tiene permisos para ver esta página.</p>
+                <a class="btn btn-ae" asp-controller="Home" asp-action="Index">Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+</section>

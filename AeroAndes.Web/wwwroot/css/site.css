@@ -49,3 +49,72 @@ a { color: var(--ae-primary); }
 .ae-status-error { background: #fde2e2; color: #7f1d1d; }
 
 .ae-footer { background: #2b2230; color: #d9d0d6; margin-top: 3rem; }
+
+/* ===== Acceso y panel de administración ===== */
+.ae-auth { background: var(--ae-soft); min-height: 72vh; display: flex; align-items: center; padding: 3rem 0; }
+.ae-auth-card {
+    background: #fff; border-radius: 18px; max-width: 440px; margin: 0 auto; width: 100%;
+    box-shadow: 0 14px 40px rgba(43,34,48,.15); overflow: hidden;
+}
+.ae-auth-top { background: linear-gradient(135deg, var(--ae-primary-dark), var(--ae-primary)); color: #fff; padding: 1.75rem 2rem; }
+.ae-auth-top h1 { font-size: 1.5rem; font-weight: 700; margin: 0; }
+.ae-auth-top p { margin: .25rem 0 0; opacity: .85; font-size: .95rem; }
+.ae-auth-body { padding: 2rem; }
+.ae-auth-body .form-control:focus { border-color: var(--ae-primary); box-shadow: 0 0 0 .2rem rgba(165,13,59,.18); }
+.ae-auth-note { font-size: .85rem; color: #6b5f68; margin-top: 1.25rem; }
+
+.ae-admin-head { background: var(--ae-soft); border-bottom: 1px solid #e8e0e4; padding: 1.5rem 0; }
+.ae-admin-head h1 { font-size: 1.6rem; font-weight: 700; margin: 0; }
+
+.ae-stat { border: 1px solid #e8e0e4; border-radius: 14px; background: #fff; padding: 1.1rem 1.25rem; height: 100%; border-left: 5px solid var(--ae-primary); }
+.ae-stat-num { font-size: 2rem; font-weight: 700; color: var(--ae-primary); line-height: 1.1; }
+.ae-stat-label { color: #6b5f68; font-size: .9rem; }
+.ae-stat-warn { border-left-color: #d97706; }
+.ae-stat-warn .ae-stat-num { color: #b45309; }
+
+.ae-panel { border: 1px solid #e8e0e4; border-radius: 14px; background: #fff; padding: 1.25rem; height: 100%; }
+.ae-panel h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: .75rem; }
+.ae-table th { font-size: .8rem; text-transform: uppercase; letter-spacing: .4px; color: #6b5f68; border-bottom-width: 1px; }
+
+.ae-badge { display: inline-block; border-radius: 999px; padding: .15rem .65rem; font-size: .78rem; font-weight: 600; }
+.ae-badge-pendiente { background: #fef3c7; color: #92400e; }
+.ae-badge-ok { background: #d1f0dd; color: #14532d; }
+.ae-badge-cancel { background: #fde2e2; color: #7f1d1d; }
+.ae-badge-info { background: #e0e7ff; color: #312e81; }
+
+.ae-nav-user { color: rgba(255,255,255,.8); font-size: .9rem; }
+.ae-linkbtn { background: none; border: 0; padding: 0; }
+
+/* ===== Resultados de vuelos ===== */
+.ae-summary { background: #fff; border-bottom: 1px solid #e8e0e4; padding: .9rem 0; }
+.ae-summary-sep { border-left: 1px solid #cdbfc6; padding-left: 1rem; }
+.ae-modify { color: var(--ae-primary); text-decoration: none; }
+
+.ae-datestrip { display: flex; gap: .5rem; overflow-x: auto; padding-bottom: .25rem; }
+.ae-day {
+    flex: 1 0 110px; text-align: center; text-decoration: none; color: var(--ae-ink);
+    background: #fff; border: 1px solid #e8e0e4; border-radius: 12px; padding: .6rem .4rem;
+}
+.ae-day:hover { border-color: var(--ae-primary); }
+.ae-day-name { display: block; font-weight: 600; font-size: .9rem; }
+.ae-day-price { display: block; font-size: .8rem; color: var(--ae-primary); font-weight: 600; }
+.ae-day-empty { opacity: .6; }
+.ae-day-empty .ae-day-price { color: #6b5f68; font-weight: 400; }
+.ae-day-on { background: var(--ae-primary); border-color: var(--ae-primary); color: #fff; opacity: 1; }
+.ae-day-on .ae-day-price { color: #fff; }
+
+.ae-pill { display: inline-block; border: 1px solid #cdbfc6; border-radius: 999px; padding: .25rem .85rem; font-size: .85rem; text-decoration: none; color: var(--ae-ink); background: #fff; }
+.ae-pill:hover { border-color: var(--ae-primary); }
+.ae-pill-on { background: var(--ae-primary); border-color: var(--ae-primary); color: #fff; }
+
+.ae-flight { position: relative; }
+.ae-flight-promo { border-left: 5px solid var(--ae-primary); }
+.ae-tags { position: absolute; top: -12px; right: 14px; display: flex; gap: .4rem; }
+.ae-tag { border-radius: 8px; padding: .15rem .7rem; font-size: .75rem; font-weight: 700; color: #fff; }
+.ae-tag-cheap { background: #d6336c; }
+.ae-tag-fast { background: #0f766e; }
+.ae-iata { color: #6b5f68; font-weight: 400; font-size: 1.1rem; }
+.ae-low { color: #b45309; font-weight: 600; }
+
+/* ===== Formulario de contacto ===== */
+.ae-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }

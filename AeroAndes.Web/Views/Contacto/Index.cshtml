@@ -1,0 +1,67 @@
+@model ContactoViewModel
+@{
+    ViewData["Title"] = "Centro de ayuda";
+}
+
+<section class="ae-admin-head">
+    <div class="container">
+        <h1>Centro de ayuda</h1>
+        <span class="text-muted">Escríbanos y le responderemos a la brevedad.</span>
+    </div>
+</section>
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-7">
+            @if (TempData["Enviado"] is string ok)
+            {
+                <div class="alert alert-success" role="status">@ok</div>
+            }
+
+            <div class="ae-panel">
+                <form method="post" asp-controller="Contacto" asp-action="Index" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Nombre" class="form-label fw-semibold">Nombre completo</label>
+                        <input asp-for="Nombre" class="form-control" required minlength="2" maxlength="100" autocomplete="name" />
+                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Correo" class="form-label fw-semibold">Correo electrónico</label>
+                        <input asp-for="Correo" type="email" class="form-control" required maxlength="150" autocomplete="email" />
+                        <span asp-validation-for="Correo" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Asunto" class="form-label fw-semibold">Asunto</label>
+                        <input asp-for="Asunto" class="form-control" required minlength="5" maxlength="150" />
+                        <span asp-validation-for="Asunto" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Mensaje" class="form-label fw-semibold">Mensaje</label>
+                        <textarea asp-for="Mensaje" class="form-control" rows="6" required minlength="10" maxlength="2000"></textarea>
+                        <span asp-validation-for="Mensaje" class="text-danger small"></span>
+                    </div>
+
+                    <div class="ae-hp" aria-hidden="true">
+                        <label for="Sitio">No llenar este campo</label>
+                        <input asp-for="Sitio" tabindex="-1" autocomplete="off" />
+                    </div>
+
+                    <button type="submit" class="btn btn-ae">Enviar mensaje</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-5 mt-3 mt-lg-0">
+            <div class="ae-panel">
+                <h2>Antes de escribirnos</h2>
+                <ul class="mb-0 small">
+                    <li>Indique su código de reserva si consulta por un viaje.</li>
+                    <li>Nunca escriba contraseñas ni datos de tarjetas en este formulario.</li>
+                    <li>Este es un sitio académico y todos los datos son de prueba.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

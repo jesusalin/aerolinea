@@ -1,43 +1,87 @@
 @model BusquedaViewModel
 @{
     ViewData["Title"] = "Vuelos disponibles";
+    var origen = Model.Destinos.FirstOrDefault(d => d.Id == Model.OrigenId)?.Ciudad ?? "Cualquier origen";
+    var destino = Model.Destinos.FirstOrDefault(d => d.Id == Model.DestinoId)?.Ciudad ?? "Cualquier destino";
+    var hayBusqueda = Model.OrigenId.HasValue || Model.DestinoId.HasValue || Model.Fecha.HasValue;
+    var fechaTexto = Model.Fecha?.ToString("yyyy-MM-dd");
+    var ordenes = new[]
+    {
+        new { Clave = "precio", Texto = "Menor precio" },
+        new { Clave = "salida", Texto = "Salida más temprana" },
+        new { Clave = "duracion", Texto = "Más rápido" }
+    };
 }
-<div class="container py-4">
-    <h1 class="h3 mb-3">Vuelos disponibles</h1>
+@functions {
+    static readonly string[] NombreDia = { "dom", "lun", "mar", "mié", "jue", "vie", "sáb" };
+    static string DiaCorto(DateTime d) => NombreDia[(int)d.DayOfWeek] + ", " + d.ToString("dd/MM");
+}
 
-    <form class="ae-card p-3 mb-4" method="get" asp-controller="Vuelos" asp-action="Buscar">
-        <div class="row g-3 align-items-end">
-            <div class="col-md-3">
-                <label class="form-label fw-semibold" for="origenId">Origen</label>
-                <select class="form-select" id="origenId" name="origenId">
-                    <option value="">Cualquiera</option>
-                    @foreach (var d in Model.Destinos)
-                    {
-                        <option value="@d.Id" selected="@(Model.OrigenId == d.Id)">@d.Etiqueta</option>
-                    }
-                </select>
+<section class="ae-summary">
+    <div class="container d-flex flex-wrap align-items-center gap-3">
+        <div class="fw-semibold">@origen → @destino</div>
+        <div class="ae-summary-sep">@(Model.Fecha.HasValue ? Fmt.Fecha(Model.Fecha.Value) : "Cualquier fecha")</div>
+        <div class="ae-summary-sep">@Model.Pasajeros @(Model.Pasajeros == 1 ? "pasajero" : "pasajeros")</div>
+        <button class="btn btn-link ms-auto fw-semibold ae-modify" type="button"
+                data-bs-toggle="collapse" data-bs-target="#filtros" aria-expanded="@(hayBusqueda ? "false" : "true")" aria-controls="filtros">
+            Modificar búsqueda
+        </button>
+    </div>
+</section>
+
+<div class="container py-4">
+    <div class="collapse @(hayBusqueda ? "" : "show")" id="filtros">
+        <form class="ae-card p-3 mb-4" method="get" asp-controller="Vuelos" asp-action="Buscar">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold" for="origenId">Origen</label>
+                    <select class="form-select" id="origenId" name="origenId">
+                        <option value="">Cualquiera</option>
+                        @foreach (var d in Model.Destinos)
+                        {
+                            <option value="@d.Id" selected="@(Model.OrigenId == d.Id)">@d.Etiqueta</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold" for="destinoId">Destino</label>
+                    <select class="form-select" id="destinoId" name="destinoId">
+                        <option value="">Cualquiera</option>
+                        @foreach (var d in Model.Destinos)
+                        {
+                            <option value="@d.Id" selected="@(Model.DestinoId == d.Id)">@d.Etiqueta</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold" for="fecha">Fecha de salida</label>
+                    <input class="form-control" type="date" id="fecha" name="fecha" value="@fechaTexto" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold" for="pasajeros">Pasajeros</label>
+                    <input class="form-control" type="number" id="pasajeros" name="pasajeros" min="1" max="9" value="@Model.Pasajeros" />
+                </div>
+                <div class="col-md-2 d-grid"><button type="submit" class="btn btn-ae">Buscar</button></div>
             </div>
-            <div class="col-md-3">
-                <label class="form-label fw-semibold" for="destinoId">Destino</label>
-                <select class="form-select" id="destinoId" name="destinoId">
-                    <option value="">Cualquiera</option>
-                    @foreach (var d in Model.Destinos)
-                    {
-                        <option value="@d.Id" selected="@(Model.DestinoId == d.Id)">@d.Etiqueta</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label fw-semibold" for="fecha">Salida desde</label>
-                <input class="form-control" type="date" id="fecha" name="fecha" value="@(Model.Fecha?.ToString("yyyy-MM-dd"))" />
-            </div>
-            <div class="col-md-2">
-                <label class="form-label fw-semibold" for="pasajeros">Pasajeros</label>
-                <input class="form-control" type="number" id="pasajeros" name="pasajeros" min="1" max="9" value="@Model.Pasajeros" />
-            </div>
-            <div class="col-md-2 d-grid"><button type="submit" class="btn btn-ae">Buscar</button></div>
+        </form>
+    </div>
+
+    @if (Model.Dias.Count > 0)
+    {
+        <div class="ae-datestrip mb-4" role="navigation" aria-label="Fechas cercanas">
+            @foreach (var d in Model.Dias)
+            {
+                var activo = Model.Fecha.HasValue && d.Dia == Model.Fecha.Value.Date;
+                <a class="ae-day @(activo ? "ae-day-on" : "") @(d.PrecioMinimo == null ? "ae-day-empty" : "")"
+                   asp-controller="Vuelos" asp-action="Buscar"
+                   asp-route-origenId="@Model.OrigenId" asp-route-destinoId="@Model.DestinoId"
+                   asp-route-fecha="@d.Dia.ToString("yyyy-MM-dd")" asp-route-pasajeros="@Model.Pasajeros" asp-route-orden="@Model.Orden">
+                    <span class="ae-day-name">@DiaCorto(d.Dia)</span>
+                    <span class="ae-day-price">@(d.PrecioMinimo.HasValue ? Fmt.Precio(d.PrecioMinimo.Value) : "Sin vuelos")</span>
+                </a>
+            }
         </div>
-    </form>
+    }
 
     @if (Model.Error != null)
     {
@@ -45,30 +89,66 @@
     }
     else if (Model.Vuelos.Count == 0)
     {
-        <div class="alert alert-secondary">No encontramos vuelos con esos datos. Prueba con otras fechas o destinos.</div>
+        <div class="alert alert-secondary">No encontramos vuelos con esos datos. Pruebe con otra fecha, otro destino o elija un día de la barra de fechas.</div>
     }
     else
     {
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+            <span class="text-muted small me-1">Ordenar por:</span>
+            @foreach (var o in ordenes)
+            {
+                <a class="ae-pill @(Model.Orden == o.Clave ? "ae-pill-on" : "")"
+                   asp-controller="Vuelos" asp-action="Buscar"
+                   asp-route-origenId="@Model.OrigenId" asp-route-destinoId="@Model.DestinoId"
+                   asp-route-fecha="@fechaTexto" asp-route-pasajeros="@Model.Pasajeros" asp-route-orden="@o.Clave">@o.Texto</a>
+            }
+            <span class="ms-auto text-muted small">@Model.Vuelos.Count @(Model.Vuelos.Count == 1 ? "vuelo" : "vuelos")</span>
+        </div>
+
         <div class="d-grid gap-3">
             @foreach (var v in Model.Vuelos)
             {
-                <div class="ae-flight">
-                    <div class="row align-items-center g-3">
-                        <div class="col-md-2">
-                            <div class="small text-muted">@Fmt.Fecha(v.FechaSalida)</div>
-                            <div class="fw-semibold">@v.CodigoVuelo</div>
+                <div class="ae-flight @(v.Id == Model.IdMasBarato ? "ae-flight-promo" : "")">
+                    @if (v.Id == Model.IdMasBarato || v.Id == Model.IdMasRapido)
+                    {
+                        <div class="ae-tags">
+                            @if (v.Id == Model.IdMasRapido) { <span class="ae-tag ae-tag-fast">Más rápido</span> }
+                            @if (v.Id == Model.IdMasBarato) { <span class="ae-tag ae-tag-cheap">Más barato</span> }
                         </div>
-                        <div class="col-md-6">
+                    }
+                    <div class="row align-items-center g-3">
+                        <div class="col-md-8">
                             <div class="d-flex justify-content-between align-items-start">
-                                <div><div class="ae-time">@Fmt.Hora(v.FechaSalida)</div><div class="small">@v.Origen?.Ciudad (@v.Origen?.CodigoAeropuerto)</div></div>
-                                <div class="small text-muted text-center flex-grow-1 px-3"><div class="ae-line"></div>@Fmt.Duracion(v.FechaSalida, v.FechaLlegada)</div>
-                                <div class="text-end"><div class="ae-time">@Fmt.Hora(v.FechaLlegada)</div><div class="small">@v.Destino?.Ciudad (@v.Destino?.CodigoAeropuerto)</div></div>
+                                <div>
+                                    <div class="ae-time">@Fmt.Hora(v.FechaSalida) <span class="ae-iata">@v.Origen?.CodigoAeropuerto</span></div>
+                                    <div class="small text-muted">@v.Origen?.Ciudad</div>
+                                </div>
+                                <div class="small text-muted text-center flex-grow-1 px-3">
+                                    Duración
+                                    <div class="ae-line"></div>
+                                    @Fmt.Duracion(v.FechaSalida, v.FechaLlegada)
+                                </div>
+                                <div class="text-end">
+                                    <div class="ae-time">@Fmt.Hora(v.FechaLlegada) <span class="ae-iata">@v.Destino?.CodigoAeropuerto</span></div>
+                                    <div class="small text-muted">@v.Destino?.Ciudad</div>
+                                </div>
+                            </div>
+                            <div class="small mt-2 text-muted">
+                                <span class="fw-semibold text-decoration-underline">Directo</span>
+                                · @Fmt.Fecha(v.FechaSalida) · Vuelo @v.CodigoVuelo
+                                @if (v.AsientosDisponibles <= 10)
+                                {
+                                    <span class="ae-low">· ¡Quedan @v.AsientosDisponibles asientos!</span>
+                                }
                             </div>
                         </div>
-                        <div class="col-md-2 small text-muted">@v.AsientosDisponibles asientos disponibles</div>
-                        <div class="col-md-2 text-md-end">
-                            <span class="small text-muted d-block">Desde</span>
+                        <div class="col-md-4 text-md-end">
+                            <span class="small text-muted d-block">Por persona desde</span>
                             <span class="ae-price">@Fmt.Precio(v.PrecioDesde)</span>
+                            @if (Model.Pasajeros > 1)
+                            {
+                                <span class="small text-muted d-block">Total @Model.Pasajeros pasajeros: @Fmt.Precio(v.PrecioDesde * Model.Pasajeros)</span>
+                            }
                         </div>
                     </div>
                 </div>

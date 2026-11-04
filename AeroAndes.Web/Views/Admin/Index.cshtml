@@ -1,21 +1,115 @@
-﻿@model AdminResumen
+@model AdminResumen
 @{
     ViewData["Title"] = "Panel de administración";
 }
+@functions {
+    static string Badge(string estado) => estado switch
+    {
+        "pendiente" => "ae-badge-pendiente",
+        "confirmada" or "atendido" or "programado" => "ae-badge-ok",
+        "cancelada" or "cancelado" => "ae-badge-cancel",
+        _ => "ae-badge-info"
+    };
+}
+
+<section class="ae-admin-head">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <div>
+            <h1>Panel de administración</h1>
+            <span class="text-muted">Sesión iniciada como <strong>@User.Identity?.Name</strong></span>
+        </div>
+        <form method="post" asp-controller="Cuenta" asp-action="Logout">
+            <button type="submit" class="btn btn-outline-secondary rounded-pill px-4">Cerrar sesión</button>
+        </form>
+    </div>
+</section>
 
 <div class="container py-4">
-    <h1 class="h3 mb-3">Panel de administración</h1>
-    <p>Sesión iniciada como <strong>@User.Identity?.Name</strong>.</p>
-    <p>Vuelos: @Model.Vuelos · Reservas: @Model.Reservas</p>
+    @if (Model.Error is not null)
+    {
+        <div class="alert alert-danger" role="alert">@Model.Error</div>
+    }
 
-    <h2 class="h5 mt-4">Últimos mensajes de contacto</h2>
-    <table class="table table-sm">
-        <thead><tr><th>Fecha</th><th>Nombre</th><th>Asunto</th><th>Estado</th></tr></thead>
-        <tbody>
-            @foreach (var c in Model.Contactos)
-            {
-                <tr><td>@c.FechaCreacion.ToString("yyyy-MM-dd HH:mm")</td><td>@c.Nombre</td><td>@c.Asunto</td><td>@c.Estado</td></tr>
-            }
-        </tbody>
-    </table>
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="ae-stat"><div class="ae-stat-num">@Model.VuelosActivos</div><div class="ae-stat-label">Vuelos programados</div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="ae-stat"><div class="ae-stat-num">@Model.ReservasTotal</div><div class="ae-stat-label">Reservas totales</div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="ae-stat ae-stat-warn"><div class="ae-stat-num">@Model.ReservasPendientes</div><div class="ae-stat-label">Reservas pendientes</div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="ae-stat ae-stat-warn"><div class="ae-stat-num">@Model.ContactosPendientes</div><div class="ae-stat-label">Mensajes sin atender</div></div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-7">
+            <div class="ae-panel">
+                <h2>Vuelos</h2>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle ae-table mb-0">
+                        <thead><tr><th>Código</th><th>Ruta</th><th>Salida</th><th>Precio</th><th>Estado</th></tr></thead>
+                        <tbody>
+                        @foreach (var v in Model.ProximosVuelos)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@v.CodigoVuelo</td>
+                                <td>@v.Origen?.Ciudad → @v.Destino?.Ciudad</td>
+                                <td>@Fmt.Fecha(v.FechaSalida) @Fmt.Hora(v.FechaSalida)</td>
+                                <td>@Fmt.Precio(v.PrecioDesde)</td>
+                                <td><span class="ae-badge @Badge(v.Estado)">@v.Estado</span></td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="ae-panel">
+                <h2>Últimas reservas</h2>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle ae-table mb-0">
+                        <thead><tr><th>Código</th><th>Pasajero</th><th>Estado</th></tr></thead>
+                        <tbody>
+                        @foreach (var r in Model.UltimasReservas)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@r.CodigoReserva</td>
+                                <td>@r.NombrePasajero</td>
+                                <td><span class="ae-badge @Badge(r.Estado)">@r.Estado</span></td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="ae-panel">
+                <h2>Mensajes de contacto recientes</h2>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle ae-table mb-0">
+                        <thead><tr><th>Fecha</th><th>Nombre</th><th>Asunto</th><th>Estado</th></tr></thead>
+                        <tbody>
+                        @foreach (var c in Model.UltimosContactos)
+                        {
+                            <tr>
+                                <td>@Fmt.Fecha(c.FechaCreacion) @Fmt.Hora(c.FechaCreacion)</td>
+                                <td>@c.Nombre</td>
+                                <td>@c.Asunto</td>
+                                <td><span class="ae-badge @Badge(c.Estado)">@c.Estado</span></td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
