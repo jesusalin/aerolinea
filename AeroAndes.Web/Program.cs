@@ -10,12 +10,20 @@ CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// La cadena de conexión viene de user-secrets o de variables de entorno, nunca del código fuente.
-var cs = builder.Configuration.GetConnectionString("AeroAndes")
+// Las cadenas de conexión vienen de user-secrets o de variables de entorno, nunca del código fuente.
+// Se usan DOS usuarios de base de datos con privilegios distintos (mínimo privilegio):
+//   AeroAndesWeb   -> usuario 'app_web'   : sitio público (leer vuelos y destinos, guardar contactos)
+//   AeroAndesAdmin -> usuario 'app_admin' : inicio de sesión y panel de administración
+string Conexion(string nombre) =>
+    builder.Configuration.GetConnectionString(nombre)
     ?? throw new InvalidOperationException(
-        "Falta la cadena de conexión 'AeroAndes'. Configúrela con 'dotnet user-secrets' (ver LEEME.md).");
+        $"Falta la cadena de conexión '{nombre}'. Configúrela con 'dotnet user-secrets' (ver LEEME.md).");
 
-builder.Services.AddDbContext<AeroAndesDbContext>(o => o.UseMySql(cs, ServerVersion.AutoDetect(cs)));
+var csWeb = Conexion("AeroAndesWeb");
+var csAdmin = Conexion("AeroAndesAdmin");
+
+builder.Services.AddDbContext<AeroAndesDbContext>(o => o.UseMySql(csWeb, ServerVersion.AutoDetect(csWeb)));
+builder.Services.AddDbContext<AeroAndesAdminDbContext>(o => o.UseMySql(csAdmin, ServerVersion.AutoDetect(csAdmin)));
 // Valida automáticamente el token anti-CSRF en todos los POST.
 builder.Services.AddControllersWithViews(o =>
     o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));

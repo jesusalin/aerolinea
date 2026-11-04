@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using AeroAndes.Data;
 using Microsoft.AspNetCore.Authentication;
@@ -29,11 +29,11 @@ public class CuentaController : Controller
     // Hash falso: se verifica cuando el correo no existe, para que la respuesta tarde igual.
     private const string HashFalso = "$2b$12$AL54.0AbT7IAYVBEg2n0kOUs34iGEI66qHX547qn4xbzA/CXvcJZ.";
 
-    private readonly AeroAndesDbContext _db;
+    private readonly AeroAndesAdminDbContext _db;
     private readonly IMemoryCache _cache;
     private readonly ILogger<CuentaController> _log;
 
-    public CuentaController(AeroAndesDbContext db, IMemoryCache cache, ILogger<CuentaController> log)
+    public CuentaController(AeroAndesAdminDbContext db, IMemoryCache cache, ILogger<CuentaController> log)
     {
         _db = db; _cache = cache; _log = log;
     }

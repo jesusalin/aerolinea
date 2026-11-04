@@ -21,10 +21,10 @@ public class AdminResumen
 [Authorize(Roles = "Administrador")]
 public class AdminController : Controller
 {
-    private readonly AeroAndesDbContext _db;
+    private readonly AeroAndesAdminDbContext _db;
     private readonly ILogger<AdminController> _log;
 
-    public AdminController(AeroAndesDbContext db, ILogger<AdminController> log)
+    public AdminController(AeroAndesAdminDbContext db, ILogger<AdminController> log)
     {
         _db = db;
         _log = log;
@@ -54,9 +54,9 @@ public class AdminController : Controller
         }
         catch (Exception ex)
         {
-            // El detalle t√©cnico va al registro; al usuario, un mensaje gen√©rico.
-            _log.LogError(ex, "Error al cargar el panel de administraci√≥n.");
-            m.Error = "No se pudo cargar la informaci√≥n del panel. Int√©ntelo de nuevo m√°s tarde.";
+            // El detalle tÈcnico va al registro; al usuario, un mensaje genÈrico.
+            _log.LogError(ex, "Error al cargar el panel de administraciÛn.");
+            m.Error = "No se pudo cargar la informaciÛn del panel. IntÈntelo de nuevo m·s tarde.";
         }
         return View(m);
     }
