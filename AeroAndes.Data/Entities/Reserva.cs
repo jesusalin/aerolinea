@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AeroAndes.Data.Entities;
 
-public partial class Reserva
+[Table("reservas")]
+public class Reserva
 {
-    public uint Id { get; set; }
+    [Key, Column("id")] public int Id { get; set; }
+    [Column("codigo_reserva")] public string CodigoReserva { get; set; } = "";
+    [Column("vuelo_id")] public int VueloId { get; set; }
+    [Column("nombre_pasajero")] public string NombrePasajero { get; set; } = "";
+    [Column("correo")] public string Correo { get; set; } = "";
+    [Column("telefono")] public string? Telefono { get; set; }
+    [Column("cantidad_pasajeros")] public int CantidadPasajeros { get; set; } = 1;
+    [Column("estado")] public string Estado { get; set; } = "pendiente";
+    [Column("fecha_creacion")] public DateTime FechaCreacion { get; set; }
 
-    public string CodigoReserva { get; set; } = null!;
-
-    public uint VueloId { get; set; }
-
-    public string NombrePasajero { get; set; } = null!;
-
-    public string Correo { get; set; } = null!;
-
-    public string? Telefono { get; set; }
-
-    public byte CantidadPasajeros { get; set; }
-
-    public string Estado { get; set; } = null!;
-
-    public DateTime FechaCreacion { get; set; }
-
-    public virtual Vuelo Vuelo { get; set; } = null!;
+    [ForeignKey(nameof(VueloId))] public Vuelo? Vuelo { get; set; }
 }

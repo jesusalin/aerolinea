@@ -1,25 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AeroAndes.Data.Entities;
 
-public partial class Destino
+[Table("destinos")]
+public class Destino
 {
-    public uint Id { get; set; }
+    [Key, Column("id")] public int Id { get; set; }
+    [Column("ciudad")] public string Ciudad { get; set; } = "";
+    [Column("pais")] public string Pais { get; set; } = "";
+    [Column("codigo_aeropuerto")] public string CodigoAeropuerto { get; set; } = "";
+    [Column("descripcion")] public string? Descripcion { get; set; }
+    [Column("imagen_url")] public string? ImagenUrl { get; set; }
+    [Column("activo")] public bool Activo { get; set; } = true;
 
-    public string Ciudad { get; set; } = null!;
-
-    public string Pais { get; set; } = null!;
-
-    public string CodigoAeropuerto { get; set; } = null!;
-
-    public string? Descripcion { get; set; }
-
-    public string? ImagenUrl { get; set; }
-
-    public bool? Activo { get; set; }
-
-    public virtual ICollection<Vuelo> VueloDestinos { get; set; } = new List<Vuelo>();
-
-    public virtual ICollection<Vuelo> VueloOrigens { get; set; } = new List<Vuelo>();
+    [NotMapped] public string Etiqueta => $"{Ciudad} ({CodigoAeropuerto})";
 }

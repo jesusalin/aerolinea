@@ -1,0 +1,110 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Vuela con AeroAndes";
+}
+
+<section class="ae-hero">
+    <div class="container">
+        <h1 class="display-5">Viaja por el Perú y la región</h1>
+        <p class="lead mb-0">Consulta los destinos y los vuelos disponibles de AeroAndes.</p>
+    </div>
+</section>
+
+@if (Model.Error != null)
+{
+    <div class="container mt-4">
+        <div class="alert alert-danger" role="alert">@Model.Error</div>
+        <span class="ae-status ae-status-error">Base de datos: sin conexión</span>
+    </div>
+}
+else
+{
+    <div class="container ae-search-wrap">
+        <form class="ae-search" method="get" asp-controller="Vuelos" asp-action="Buscar">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold" for="origenId">Origen</label>
+                    <select class="form-select" id="origenId" name="origenId">
+                        <option value="">Cualquiera</option>
+                        @foreach (var d in Model.Destinos)
+                        {
+                            <option value="@d.Id">@d.Etiqueta</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold" for="destinoId">Destino</label>
+                    <select class="form-select" id="destinoId" name="destinoId">
+                        <option value="">Cualquiera</option>
+                        @foreach (var d in Model.Destinos)
+                        {
+                            <option value="@d.Id">@d.Etiqueta</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold" for="fecha">Salida desde</label>
+                    <input class="form-control" type="date" id="fecha" name="fecha" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold" for="pasajeros">Pasajeros</label>
+                    <input class="form-control" type="number" id="pasajeros" name="pasajeros" min="1" max="9" value="1" />
+                </div>
+                <div class="col-md-2 d-grid">
+                    <button type="submit" class="btn btn-ae">Buscar vuelos</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <section class="container mt-4">
+        <span class="ae-status ae-status-ok">Base de datos aeroandes_db: conectada · @Model.Destinos.Count destinos · @Model.TotalVuelos vuelos</span>
+    </section>
+
+    <section class="container mt-4" id="ofertas">
+        <h2 class="ae-section-title">Próximos vuelos</h2>
+        @if (Model.Ofertas.Count == 0)
+        {
+            <p class="text-muted">Por ahora no hay vuelos publicados.</p>
+        }
+        else
+        {
+            <div class="row g-3">
+                @foreach (var v in Model.Ofertas)
+                {
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="ae-card p-3 d-flex flex-column">
+                            <div class="small text-muted">@Fmt.Fecha(v.FechaSalida) · @Fmt.Hora(v.FechaSalida)</div>
+                            <div class="fw-bold fs-5">@v.Origen?.Ciudad → @v.Destino?.Ciudad</div>
+                            <div class="small text-muted mb-3">Vuelo @v.CodigoVuelo · @Fmt.Duracion(v.FechaSalida, v.FechaLlegada)</div>
+                            <div class="mt-auto">
+                                <span class="small text-muted d-block">Desde</span>
+                                <span class="ae-price">@Fmt.Precio(v.PrecioDesde)</span>
+                                <span class="small text-muted ms-2">@v.AsientosDisponibles asientos</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+    <section class="container mt-5" id="destinos">
+        <h2 class="ae-section-title">Destinos</h2>
+        <div class="row g-3">
+            @foreach (var d in Model.Destinos)
+            {
+                <div class="col-sm-6 col-lg-3">
+                    <a class="ae-dest" asp-controller="Vuelos" asp-action="Buscar" asp-route-destinoId="@d.Id">
+                        <div class="fs-5 fw-bold">@d.Ciudad</div>
+                        <small>@d.Pais · @d.CodigoAeropuerto</small>
+                        @if (!string.IsNullOrWhiteSpace(d.Descripcion))
+                        {
+                            <div class="small mt-2">@d.Descripcion</div>
+                        }
+                    </a>
+                </div>
+            }
+        </div>
+    </section>
+}

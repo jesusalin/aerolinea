@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>AeroAndes.Web</RootNamespace>
+    <!-- Secretos de usuario: la cadena de conexión NO se guarda en el código -->
+    <UserSecretsId>aeroandes-web-secrets</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AeroAndes.Data\AeroAndes.Data.csproj" />
+  </ItemGroup>
+
+</Project>

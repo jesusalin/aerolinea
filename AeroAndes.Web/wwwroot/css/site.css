@@ -1,0 +1,51 @@
+:root {
+    --ae-primary: #a50d3b;
+    --ae-primary-dark: #6f0a28;
+    --ae-ink: #2b2230;
+    --ae-soft: #f6f2f4;
+}
+
+body { color: var(--ae-ink); background: #fff; font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif; }
+a { color: var(--ae-primary); }
+
+.ae-header { background: linear-gradient(90deg, var(--ae-primary-dark), var(--ae-primary)); }
+.ae-brand { font-weight: 700; font-size: 1.4rem; letter-spacing: .5px; }
+
+.ae-hero {
+    background: linear-gradient(135deg, var(--ae-primary-dark) 0%, var(--ae-primary) 55%, #d6336c 100%);
+    color: #fff;
+    padding: 3.5rem 0 5.5rem;
+}
+.ae-hero h1 { font-weight: 700; }
+
+.ae-search-wrap { position: relative; z-index: 2; }
+.ae-search {
+    background: #fff; color: var(--ae-ink); border-radius: 16px;
+    padding: 1.25rem; box-shadow: 0 10px 30px rgba(0,0,0,.18); margin-top: -3.5rem;
+}
+
+.btn-ae { background: var(--ae-primary); border-color: var(--ae-primary); color: #fff; border-radius: 999px; padding-left: 1.5rem; padding-right: 1.5rem; }
+.btn-ae:hover, .btn-ae:focus { background: var(--ae-primary-dark); border-color: var(--ae-primary-dark); color: #fff; }
+
+.ae-section-title { font-weight: 700; margin-bottom: 1rem; }
+
+.ae-card { border: 1px solid #e8e0e4; border-radius: 14px; background: #fff; height: 100%; }
+.ae-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+.ae-price { color: var(--ae-primary); font-weight: 700; font-size: 1.25rem; }
+
+.ae-dest {
+    border-radius: 14px; color: #fff; padding: 1.5rem 1.25rem; min-height: 130px;
+    background: linear-gradient(135deg, #3a0a20, #a50d3b); text-decoration: none; display: block; height: 100%;
+}
+.ae-dest:hover { color: #fff; filter: brightness(1.1); }
+.ae-dest small { opacity: .85; }
+
+.ae-flight { border: 1px solid #e8e0e4; border-radius: 14px; padding: 1rem 1.25rem; background: #fff; }
+.ae-time { font-size: 1.4rem; font-weight: 700; }
+.ae-line { height: 2px; background: #cdbfc6; position: relative; top: .8rem; margin-bottom: 1rem; }
+
+.ae-status { display: inline-block; border-radius: 999px; padding: .25rem .8rem; font-size: .85rem; font-weight: 600; }
+.ae-status-ok { background: #d1f0dd; color: #14532d; }
+.ae-status-error { background: #fde2e2; color: #7f1d1d; }
+
+.ae-footer { background: #2b2230; color: #d9d0d6; margin-top: 3rem; }

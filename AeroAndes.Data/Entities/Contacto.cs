@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AeroAndes.Data.Entities;
 
-public partial class Contacto
+[Table("contactos")]
+public class Contacto
 {
-    public uint Id { get; set; }
-
-    public string Nombre { get; set; } = null!;
-
-    public string Correo { get; set; } = null!;
-
-    public string Asunto { get; set; } = null!;
-
-    public string Mensaje { get; set; } = null!;
-
-    public DateTime FechaCreacion { get; set; }
-
-    public string Estado { get; set; } = null!;
+    [Key, Column("id")] public int Id { get; set; }
+    [Column("nombre")] public string Nombre { get; set; } = "";
+    [Column("correo")] public string Correo { get; set; } = "";
+    [Column("asunto")] public string Asunto { get; set; } = "";
+    [Column("mensaje")] public string Mensaje { get; set; } = "";
+    [Column("fecha_creacion")] public DateTime FechaCreacion { get; set; }
+    [Column("estado")] public string Estado { get; set; } = "pendiente";
 }
