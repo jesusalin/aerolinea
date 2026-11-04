@@ -2,6 +2,35 @@
 
 Proyecto académico de Seguridad de la Información (aerolínea ficticia). Crea el proyecto ASP.NET Core, configura una conexión protegida con MySQL y muestra en la página principal los datos de la base `aeroandes_db` de la semana 7.
 
+## Configuración actual (Semana 10): DOS usuarios de base de datos
+
+Desde la Semana 10 la aplicación usa dos cadenas de conexión (`Program.cs` las exige). Los pasos 2 y 3 de más abajo (una sola cadena `AeroAndes`) son de la Semana 8 y ya no bastan.
+
+1. Ejecute `database/aeroandes_db.sql` (crea la base y los datos de prueba).
+2. Abra `database/seguridad_usuarios.sql`, reemplace las tres claves `CAMBIAR_...` por claves propias (sin los caracteres `;` ni `=`) y ejecútelo como root. Crea `app_web`, `app_admin` y `app_respaldo`.
+3. Guarde las dos cadenas en los secretos de usuario (desde la carpeta de la solución):
+
+```
+dotnet user-secrets set "ConnectionStrings:AeroAndesWeb" "Server=localhost;Port=3306;Database=aeroandes_db;User=app_web;Password=SU_CLAVE_WEB" --project AeroAndes.Web
+dotnet user-secrets set "ConnectionStrings:AeroAndesAdmin" "Server=localhost;Port=3306;Database=aeroandes_db;User=app_admin;Password=SU_CLAVE_ADMIN" --project AeroAndes.Web
+```
+
+4. Ejecute siempre con el perfil **https** (la cookie de sesión es `Secure` y no funciona por http):
+
+```
+dotnet dev-certs https --trust
+dotnet run --project AeroAndes.Web --launch-profile https
+```
+
+Si usa XAMPP/MariaDB y aparece un error de SSL, agregue `SslMode=None` al final de ambas cadenas (solo en desarrollo local).
+
+| Mensaje | Causa probable |
+|---|---|
+| Falta la cadena de conexión 'AeroAndesWeb' (o 'AeroAndesAdmin') | Falta uno de los dos secretos del paso 3 |
+| Access denied for user 'app_web' (o 'app_admin') | No se ejecutó `seguridad_usuarios.sql` o la clave del secreto no coincide |
+| SELECT command denied to user ... for table ... | Falta un permiso en `seguridad_usuarios.sql` para esa tabla |
+| Correo o contraseña incorrectos (con el admin de prueba) | La contraseña no es la usada para generar el hash de `aeroandes_db.sql` |
+
 ## Estructura de la solución
 
 ```
